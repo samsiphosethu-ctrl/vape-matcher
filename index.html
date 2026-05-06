@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Your Vape Match</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+body {
+  margin: 0;
+  padding: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: #ffffff;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 100vh;
+}
+ 
+.wrap {
+  width: 100%;
+  max-width: 480px;
+}
+ 
+/* ── Card ── */
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1.5px solid rgba(27,58,47,0.10);
+  overflow: hidden;
+  box-shadow: 0 2px 20px rgba(27,58,47,0.07);
+}
+ 
+/* ── Header band ── */
+.band {
+  background: #1B3A2F;
+  padding: 18px 24px 16px;
+  text-align: center;
+}
+ 
+.band-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 4px;
+}
+ 
+.band-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 20px;
+  font-weight: bold;
+  color: #ffffff;
+  letter-spacing: -0.3px;
+  line-height: 1.25;
+}
+ 
+/* ── Progress ── */
+.progress-bar {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  padding: 14px 0 0;
+}
+ 
+.pip {
+  height: 4px;
+  border-radius: 2px;
+  width: 28px;
+  background: rgba(27,58,47,0.12);
+  transition: background 0.35s ease, width 0.35s ease;
+}
+.pip.done  { background: rgba(27,58,47,0.35); }
+.pip.live  { background: #1B3A2F; width: 48px; }
+ 
+/* ── Screen wrapper ── */
+.screen { padding: 20px 24px 24px; }
+ 
+.q-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: rgba(27,58,47,0.4);
+  margin-bottom: 8px;
+}
+ 
+.q-text {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 17px;
+  font-weight: bold;
+  color: #1B3A2F;
+  line-height: 1.4;
+  margin-bottom: 16px;
+}
+ 
+/* ── Option buttons ── */
+.opts { display: flex; flex-direction: column; gap: 8px; }
+ 
+.opt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #F8F6F2;
+  border: 1.5px solid transparent;
+  border-radius: 12px;
+  padding: 11px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1B3A2F;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+ 
+.opt:hover, .opt:focus {
+  background: #1B3A2F;
+  color: #ffffff;
+  border-color: #1B3A2F;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(27,58,47,0.18);
+  outline: none;
+}
+ 
+.opt-icon {
+  font-size: 18px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+ 
+/* ── Result screen ── */
+.result-inner {
+  text-align: center;
+  padding: 4px 0 0;
+}
+ 
+.match-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(27,58,47,0.07);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: #1B3A2F;
+  margin-bottom: 14px;
+}
+ 
+.match-chip::before {
+  content: '✦';
+  font-size: 9px;
+  opacity: 0.6;
+}
+ 
+.result-name {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 20px;
+  font-weight: bold;
+  color: #1B3A2F;
+  line-height: 1.3;
+  margin-bottom: 10px;
+}
+ 
+.result-flavor {
+  display: inline-block;
+  background: #F8F6F2;
+  border-radius: 8px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #4A5D53;
+  letter-spacing: 0.3px;
+  margin-bottom: 12px;
+}
+ 
+.result-desc {
+  font-size: 13.5px;
+  color: #4A5D53;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  max-width: 340px;
+  margin-left: auto;
+  margin-right: auto;
+}
+ 
+.shop-btn {
+  display: inline-block;
+  background: #1B3A2F;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 12px;
+  padding: 13px 28px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  letter-spacing: 0.2px;
+  transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  border: none;
+  cursor: pointer;
+}
+ 
+.shop-btn:hover {
+  background: #2d5a3d;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 18px rgba(27,58,47,0.25);
+}
+ 
+.restart {
+  display: block;
+  margin: 12px auto 0;
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: rgba(27,58,47,0.40);
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.15s;
+}
+.restart:hover { color: #1B3A2F; }
+ 
+/* ── Fade transition ── */
+.screen {
+  animation: rise 0.28s ease both;
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(7px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+ 
+@media (max-width: 400px) {
+  body { padding: 10px; }
+  .screen { padding: 16px 18px 20px; }
+  .band { padding: 16px 18px 14px; }
+  .band-title { font-size: 18px; }
+  .q-text { font-size: 16px; }
+}
+</style>
+</head>
+<body>
+ 
+<div class="wrap">
+  <div class="card">
+ 
+    <div class="band">
+      <div class="band-eyebrow">Mood Pens</div>
+      <div class="band-title">Find Your Vape Match</div>
+    </div>
+ 
+    <div class="progress-bar" id="progress">
+      <div class="pip live"  id="pip-0"></div>
+      <div class="pip"       id="pip-1"></div>
+    </div>
+ 
+    <!-- Q1 -->
+    <div class="screen" id="q1">
+      <div class="q-label">Step 1 of 2</div>
+      <div class="q-text">What flavor world are you in right now?</div>
+      <div class="opts">
+        <button class="opt" onclick="pick(1,'earthy')"><span  class="opt-icon">🌿</span> Earthy &amp; deep</button>
+        <button class="opt" onclick="pick(1,'sweet')"><span   class="opt-icon">🍓</span> Sweet &amp; fruity</button>
+        <button class="opt" onclick="pick(1,'minty')"><span   class="opt-icon">❄️</span> Fresh &amp; minty</button>
+        <button class="opt" onclick="pick(1,'creamy')"><span  class="opt-icon">🍦</span> Smooth &amp; creamy</button>
+        <button class="opt" onclick="pick(1,'citrus')"><span  class="opt-icon">🍋</span> Bright &amp; citrusy</button>
+      </div>
+    </div>
+ 
+    <!-- Q2 -->
+    <div class="screen" id="q2" style="display:none">
+      <div class="q-label">Step 2 of 2</div>
+      <div class="q-text">How do you like to session?</div>
+      <div class="opts">
+        <button class="opt" onclick="pick(2,'quick')"><span  class="opt-icon">⚡</span> Quick hits, on the move</button>
+        <button class="opt" onclick="pick(2,'long')"><span   class="opt-icon">🛋️</span> Slow and laid-back</button>
+        <button class="opt" onclick="pick(2,'either')"><span class="opt-icon">✨</span> Depends on the day</button>
+      </div>
+    </div>
+ 
+    <!-- Result -->
+    <div class="screen" id="result" style="display:none">
+      <div class="result-inner">
+        <div class="match-chip">Your Match</div>
+        <div class="result-name"  id="r-name"></div>
+        <div class="result-flavor" id="r-flavor"></div>
+        <div class="result-desc"  id="r-desc"></div>
+        <a   class="shop-btn"     id="r-link" href="#" target="_blank" rel="noopener">Shop This Pen →</a>
+        <button class="restart" onclick="reset()">Start over</button>
+      </div>
+    </div>
+ 
+  </div>
+</div>
+ 
+<script>
+var a1 = null;
+ 
+var catalog = {
+  earthy_quick: {
+    name:   "THCa Sour Diesel Vape Pen",
+    flavor: "Earthy · Fuel-forward · Live resin",
+    desc:   "A sharp, gas-forward classic in a compact rechargeable pen. Built for active daytime sessions when you want something bold and portable.",
+    url:    "https://mood.com/product/thca-sour-diesel-disposable-vape"
+  },
+  earthy_long: {
+    name:   "THCa Purple Afghani Vape Pen",
+    flavor: "Earthy · Rich · THCa + CBD",
+    desc:   "Rich, deep flavor with a THCa and CBD blend in a reliable rechargeable pen. A go-to for slower, more intentional sessions.",
+    url:    "https://mood.com/product/thca-purple-afghani-disposable-vape"
+  },
+  earthy_either: {
+    name:   "THCa Purple Afghani Vape Pen",
+    flavor: "Earthy · Rich · THCa + CBD",
+    desc:   "Rich, deep flavor with a THCa and CBD blend in a reliable rechargeable pen. Equally at home on a quick break or a long session.",
+    url:    "https://mood.com/product/thca-purple-afghani-disposable-vape"
+  },
+  sweet_quick: {
+    name:   "THCa Strawberry Cough Vape Pen",
+    flavor: "Sweet · Strawberry · Live resin",
+    desc:   "Sweet strawberry live resin in a compact rechargeable pen. All the flavor, none of the bulk — made for sessions on the move.",
+    url:    "https://mood.com/product/thca-strawberry-cough-disposable-vape"
+  },
+  sweet_long: {
+    name:   "Hero Dose Blueberry Diesel Vape Pen",
+    flavor: "Sweet · Berry + Gas · Delta-8, HHC, HHCp",
+    desc:   "A standout berry-and-gas blend in a rechargeable bar built for a full week of consistent sessions. Bold flavor from start to finish.",
+    url:    "https://mood.com/product/hero-dose-delta-8-thc-blueberry-diesel-disposable-vape"
+  },
+  sweet_either: {
+    name:   "Hero Dose Delta-8 THC Runtz Vape Pen",
+    flavor: "Sweet · Fruity · Delta-8",
+    desc:   "Sweet, fruity Runtz flavor in a rechargeable bar that handles quick hits and longer sessions equally well.",
+    url:    "https://mood.com/product/hero-dose-delta-8-thc-runtz-disposable-vape"
+  },
+  minty_quick: {
+    name:   "Hero Dose Kush Mintz Vape Pen",
+    flavor: "Minty · Cool · HHC distillate",
+    desc:   "Refreshing, cool mint with HHC distillate in a lightweight rechargeable pen that slips right into your pocket.",
+    url:    "https://mood.com/shop/product-category/vapes"
+  },
+  minty_long: {
+    name:   "Hero Dose Kush Mintz Vape Pen",
+    flavor: "Minty · Cool · HHC distillate",
+    desc:   "Refreshing, cool mint with HHC distillate in a lightweight rechargeable pen. Clean flavor that holds up across every draw.",
+    url:    "https://mood.com/shop/product-category/vapes"
+  },
+  minty_either: {
+    name:   "Hero Dose Kush Mintz Vape Pen",
+    flavor: "Minty · Cool · HHC distillate",
+    desc:   "Refreshing, cool mint with HHC distillate in a lightweight rechargeable pen. One of a kind in the lineup.",
+    url:    "https://mood.com/shop/product-category/vapes"
+  },
+  creamy_quick: {
+    name:   "THCa Gelato Vape Pen",
+    flavor: "Creamy · Smooth · THCa + CBD",
+    desc:   "Smooth, creamy flavor with THCa and CBD in a compact hybrid pen. Enjoy on the go without giving up a single note of flavor.",
+    url:    "https://mood.com/product/thca-gelato-disposable-vape"
+  },
+  creamy_long: {
+    name:   "Hero Dose Wedding Cake Vape Pen",
+    flavor: "Creamy · Dessert · Delta-8 + THCp",
+    desc:   "Dessert-forward flavor in a rechargeable bar with Delta-8 and THCp. Made for long, laid-back evening sessions.",
+    url:    "https://mood.com/product/hero-dose-wedding-cake-disposable-vape"
+  },
+  creamy_either: {
+    name:   "THCa Gelato Vape Pen",
+    flavor: "Creamy · Smooth · THCa + CBD",
+    desc:   "Smooth, creamy flavor with THCa and CBD in a compact hybrid pen. Fits any session length without compromise.",
+    url:    "https://mood.com/product/thca-gelato-disposable-vape"
+  },
+  citrus_quick: {
+    name:   "THCa Lemon OG Vape Pen",
+    flavor: "Citrus · Bright · Live resin",
+    desc:   "Sharp lemon flavor with live resin THCa in a travel-friendly rechargeable pen. Compact, bold, and ready to go.",
+    url:    "https://mood.com/product/thca-lemon-og-disposable-vape"
+  },
+  citrus_long: {
+    name:   "THCa Lemon OG Vape Pen",
+    flavor: "Citrus · Bright · Live resin",
+    desc:   "Sharp lemon flavor with live resin THCa in a rechargeable pen that delivers clean, consistent draws every time.",
+    url:    "https://mood.com/product/thca-lemon-og-disposable-vape"
+  },
+  citrus_either: {
+    name:   "THCa Lemon OG Vape Pen",
+    flavor: "Citrus · Bright · Live resin",
+    desc:   "Sharp lemon flavor with live resin THCa. The most distinctive citrus pen in the Mood lineup — and the only one you'll need.",
+    url:    "https://mood.com/product/thca-lemon-og-disposable-vape"
+  }
+};
+ 
+function show(id) {
+  var screens = ['q1','q2','result'];
+  for (var i = 0; i < screens.length; i++) {
+    var el = document.getElementById(screens[i]);
+    el.style.display = 'none';
+  }
+  var target = document.getElementById(id);
+  target.style.display = 'block';
+  // re-trigger animation
+  target.style.animation = 'none';
+  target.offsetHeight; // reflow
+  target.style.animation = '';
+}
+ 
+function updatePips(step) {
+  // step = 1 | 2 | 3 (result)
+  var p0 = document.getElementById('pip-0');
+  var p1 = document.getElementById('pip-1');
+  if (step === 1) {
+    p0.className = 'pip live'; p1.className = 'pip';
+  } else if (step === 2) {
+    p0.className = 'pip done'; p1.className = 'pip live';
+  } else {
+    document.getElementById('progress').style.display = 'none';
+  }
+}
+ 
+function pick(q, val) {
+  if (q === 1) {
+    a1 = val;
+    updatePips(2);
+    show('q2');
+  } else {
+    var key = a1 + '_' + val;
+    var p   = catalog[key];
+    document.getElementById('r-name').textContent   = p.name;
+    document.getElementById('r-flavor').textContent = p.flavor;
+    document.getElementById('r-desc').textContent   = p.desc;
+    document.getElementById('r-link').href          = p.url;
+    updatePips(3);
+    show('result');
+  }
+}
+ 
+function reset() {
+  a1 = null;
+  var prog = document.getElementById('progress');
+  prog.style.display = 'flex';
+  updatePips(1);
+  show('q1');
+}
+</script>
+ 
+</body>
+</html>
